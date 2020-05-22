@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">CarCareDisertation</string>
+    <string name="slogan">For those that care about cars</string>
+
+    <string name="hint_REG">REG</string>
+    <string name="hint_tax">TAXED</string>
+    <string name="hint_mot">MOT</string>
+    <string name="hint_mpg">35</string>
+    <string name="hint_maxs_peed">150 m/h</string>
+    <string name="hint_bhp">350</string>
+
+    <string name="search">SEARCH</string>
+    <string name="your_vehicle">Your vehicle</string>
+    <string name="your_account">Your account </string>
+
+    <string name="taxed">TAXED</string>
+    <string name="mot">MOT</string>
+    <string name="vehicle_registration_menu">VEHICLE REGISTRATION</string>
+    <string name="technical_details_menu">TECHNICAL DETAILS</string>
+    <string name="vehicle_registration">VEHICLE REGISTRATION DETAILS</string>
+    <string name="mpg">MPG</string>
+    <string name="max_speed">MAX SPEED</string>
+    <string name="bhp">BHP</string>
+
+    <string name="main_header_img">main_header</string>
+    <string name="logo_corner_img">logo_corner</string>
+    <string name="side_tax_mot_img">side_taxmot</string>
+    <string name="car_placeholder_img">car_img_placeholder</string>
+    <string name="mpg_img">mpg_img</string>
+    <string name="max_speed_img">max_speed_img</string>
+    <string name="bhp_img">bhp_img</string>
+</resources>
