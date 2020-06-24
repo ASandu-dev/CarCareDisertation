@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="433dp"
-        android:layout_height="351dp"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
         android:contentDescription="@string/main_header_img"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,40 +19,66 @@
     <EditText
         android:id="@+id/reg_et"
         android:layout_width="175dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="76dp"
-        android:background="@drawable/reg_bg"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="125dp"
         android:autofillHints="@string/hint_REG"
+        android:background="@drawable/reg_bg"
         android:hint="@string/hint_REG"
         android:inputType="text"
-        android:textAllCaps="true"
         android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textAllCaps="true"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:layout_width="440dp"
-        android:layout_height="98dp"
-        android:layout_marginTop="112dp"
-        android:background="@drawable/footer_menu_bg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_btn" />
 
     <TextView
         android:id="@+id/search_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:text="@string/search"
-        android:textSize="20sp"
-        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginTop="25dp"
         android:fontFamily="sans-serif-black"
+        android:text="@string/search"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/reg_et"
         app:layout_constraintStart_toStartOf="@+id/reg_et"
         app:layout_constraintTop_toBottomOf="@+id/reg_et" />
+
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/garage_ico"
+        android:backgroundTint="@color/white"
+        android:contentDescription="@string/car_placeholder_img"
+        android:elevation="2dp"
+        android:foregroundGravity="center"
+        android:translationZ="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/myGarage_btn"
+        app:layout_constraintHorizontal_bias="0.29"
+        app:layout_constraintStart_toStartOf="@+id/myGarage_btn"
+        app:layout_constraintTop_toTopOf="@+id/myGarage_btn" />
+
+    <Button
+        android:id="@+id/myGarage_btn"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_marginTop="196dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:elevation="0dp"
+        android:gravity="center"
+        android:text="@string/mygarage"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_btn">
+
+    </Button>
 
 
 

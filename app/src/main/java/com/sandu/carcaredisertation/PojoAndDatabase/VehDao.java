@@ -18,6 +18,12 @@ public interface VehDao {
     @Insert
     void insertImage(VehicleImage vehicleImage);
 
+    @Insert
+    void insertTax(VehicleTax vehicleTax);
+
+    @Insert
+    void insertMot(VehicleMot vehicleMot);
+
     @Update
     void updateVehicle(VehicleData vehicleData);
 
@@ -30,16 +36,34 @@ public interface VehDao {
     @Delete
     void deleteImage(VehicleImage vehicleImage);
 
+    @Delete
+    void deleteTax(VehicleTax vehicleTax);
+
+    @Delete
+    void deleteMot(VehicleMot vehicleMot);
+
     @Query("DELETE FROM vehicle_database")
     void deleteAllVehicles();
 
     @Query("DELETE FROM veh_image")
     void deleteAllImages();
 
+    @Query("DELETE FROM vehicle_tax")
+    void deleteAllTaxes();
+
+    @Query("DELETE FROM vehicle_mot")
+    void deleteAllMots();
+
     @Query("SELECT * FROM vehicle_database")
     LiveData<List<VehicleData>> getVehicleData();
 
     @Query("SELECT * FROM veh_image")
     LiveData<List<VehicleImage>> getVehicleImage();
+
+    @Query("SELECT * FROM vehicle_tax")
+    LiveData<List<VehicleTax>> getVehicleTax();
+
+    @Query("SELECT * FROM vehicle_mot")
+    LiveData<List<VehicleMot>> getVehicleMot();
 
 }
