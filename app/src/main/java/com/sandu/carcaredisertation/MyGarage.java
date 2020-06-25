@@ -33,10 +33,12 @@ public class MyGarage extends AppCompatActivity implements MyGarageAdapter.OnCar
 
     MyGarageAdapter adapter;
 
-    private List<VehicleTax> tax = new ArrayList<>();
-    private List<VehicleMot> mot = new ArrayList<>();
+
     private List<VehicleData> cars = new ArrayList<>();
     private List<VehicleImage> image = new ArrayList<>();
+    private List<VehicleTax> tax = new ArrayList<>();
+    private List<VehicleMot> mot = new ArrayList<>();
+
 
 
 
@@ -56,7 +58,7 @@ public class MyGarage extends AppCompatActivity implements MyGarageAdapter.OnCar
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
 
-        adapter = new MyGarageAdapter(cars, image, this);
+        adapter = new MyGarageAdapter(cars, image, tax, mot, this);
         recyclerView.setAdapter(adapter);
 
         back_btn.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +89,19 @@ public class MyGarage extends AppCompatActivity implements MyGarageAdapter.OnCar
             }
         });
 
+        vehRepository.getAllTax().observe(this, new Observer<List<VehicleTax>>() {
+            @Override
+            public void onChanged(List<VehicleTax> vehicleTaxes) {
+                adapter.setTax(vehicleTaxes);
+            }
+        });
+
+        vehRepository.getAllMot().observe(this, new Observer<List<VehicleMot>>() {
+            @Override
+            public void onChanged(List<VehicleMot> vehicleMots) {
+                adapter.setMot(vehicleMots);
+            }
+        });
 
 
     }
@@ -106,10 +121,13 @@ public class MyGarage extends AppCompatActivity implements MyGarageAdapter.OnCar
             final int position = viewHolder.getAdapterPosition();
             VehicleData vehicleData = adapter.getVehicleAtPosition(position);
             VehicleImage vehicleImage = adapter.getImageAtPosition(position);
+            VehicleTax vehicleTax = adapter.getTaxAtPosition(position);
+            VehicleMot vehicleMot = adapter.getMotAtPosition(position);
 
             VehicleViewModel vehicleViewModel = new VehicleViewModel(adapter.application);
             vehicleViewModel.deleteCar(vehicleData);
             vehicleViewModel.deleteImage(vehicleImage);
+
         }
     };
 
@@ -118,6 +136,9 @@ public class MyGarage extends AppCompatActivity implements MyGarageAdapter.OnCar
 
         VehicleData vehicleData = adapter.getVehicleAtPosition(position);
         VehicleImage vehicleImage = adapter.getImageAtPosition(position);
+        VehicleTax vehicleTax = adapter.getTaxAtPosition(position);
+        VehicleMot vehicleMot = adapter.getMotAtPosition(position);
+
 
 
         Intent i = new Intent(this, CarDisplay.class);
@@ -149,6 +170,8 @@ public class MyGarage extends AppCompatActivity implements MyGarageAdapter.OnCar
         i.putExtra("Length", vehicleData.getVehLength());
         i.putExtra("Wheelbase", vehicleData.getVehWheelBase());
         i.putExtra("VehicleImage", vehicleImage.getVehImg());
+        i.putExtra("TaxDue", vehicleTax.getVehExpiryDate());
+        i.putExtra("MotDue", vehicleMot.getVehNextMotDue());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
         MyGarage.this.finish();

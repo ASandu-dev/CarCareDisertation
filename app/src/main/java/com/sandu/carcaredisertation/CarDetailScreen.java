@@ -1,25 +1,22 @@
 package com.sandu.carcaredisertation;
 
-import android.app.ActionBar;
 import android.app.Application;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Observer;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -46,9 +43,10 @@ import java.util.List;
 public class CarDetailScreen extends AppCompatActivity {
 
 
-    public TextView mAm_tv, taxed_tv, motd_tv;
-    private ImageView imageView;
-    private Button newSearch, saveToGarage;
+    Dialog popup;
+    TextView mAm_tv, taxed_tv, mot_tv, popup_tax_tv, popup_mot_tv;
+    ImageView imageView, close_popup_tax, close_popup_mot;
+    Button newSearch, saveToGarage, info_tax, info_mot;
 
     private VehicleData vehicleData;
     private VehicleDatabase vehicleDatabase;
@@ -66,6 +64,7 @@ public class CarDetailScreen extends AppCompatActivity {
     public List<String> engineAndGearbox = new ArrayList<>();
     public List<String> chassis = new ArrayList<>();
     public List<String> dimensions = new ArrayList<>();
+    public List<String> taxAndMot = new ArrayList<>();
     //Public Values Basic Info
     public String make, model, year, firstRegistered, colour, fuelType, cylinderCapacity, co2Emissions;
     //Public Values Performance
@@ -78,8 +77,10 @@ public class CarDetailScreen extends AppCompatActivity {
     public String doors, seats, bodyStyle;
     //Public Values Dimensions
     public String height, width, length, wheelbase;
+    //Public Values Tax and MOT
+    public String taxDue, motDue;
 
-    public String carImage, expDate, nextDate;
+    public String carImage;
     public boolean isTaxed,validMot;
 
     @Override
@@ -87,17 +88,21 @@ public class CarDetailScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cardetail_activity);
 
+        popup = new Dialog(this);
+
         context = this.getApplicationContext();
 
         //TextViews
         mAm_tv = findViewById(R.id.modelAndMake);
         taxed_tv = findViewById(R.id.taxed_tv);
-        motd_tv = findViewById(R.id.mot_tv);
+        mot_tv = findViewById(R.id.mot_tv);
         //Image Views
         imageView = findViewById(R.id.car_img_holder);
         //Buttons
         saveToGarage = findViewById(R.id.saveToGarage);
         newSearch = findViewById(R.id.newSearch);
+        info_tax = findViewById(R.id.info_tax);
+        info_mot = findViewById(R.id.info_mot);
 
         listView = findViewById(R.id.eListView);
 
@@ -135,6 +140,19 @@ public class CarDetailScreen extends AppCompatActivity {
             }
         });
 
+        info_tax.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    ShowTaxPopup();
+            }
+        });
+        info_mot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowMotPopup();
+            }
+        });
+
     }
 
 
@@ -162,6 +180,7 @@ public class CarDetailScreen extends AppCompatActivity {
         listHash.put("Chassis", chassis);
 
         listHash.put("Dimensions", dimensions);
+
 
     }
 
@@ -355,6 +374,7 @@ public class CarDetailScreen extends AppCompatActivity {
         RequestQueue requestVehicleDataQueue = Volley.newRequestQueue(getApplicationContext());
         requestVehicleDataQueue.add(requestVehicleData);
 
+            //GetVehicle Image
         StringRequest requestVehicleImg = new StringRequest(urlVehImage, new com.android.volley.Response.Listener<String>() {
 
             @Override
@@ -397,7 +417,8 @@ public class CarDetailScreen extends AppCompatActivity {
 
     public void useTaxData(boolean taxedResponse, String expiryDate) {
         isTaxed = taxedResponse;
-        expDate = expiryDate;
+        taxDue = expiryDate;
+
 
 
         if (isTaxed = true){
@@ -411,13 +432,14 @@ public class CarDetailScreen extends AppCompatActivity {
     public void useMotData(boolean hasMotResponse, String nextDueDate) {
 
         validMot = hasMotResponse;
-        nextDate = nextDueDate;
+        motDue = nextDueDate;
+
 
         if (validMot = true){
-            motd_tv.setTextColor(Color.GREEN);
+            mot_tv.setTextColor(Color.GREEN);
 
         }else {
-            motd_tv.setTextColor(Color.RED);
+            mot_tv.setTextColor(Color.RED);
         }
     }
 
@@ -482,6 +504,7 @@ public class CarDetailScreen extends AppCompatActivity {
         dimensions.add("Length: "+length);
         dimensions.add("Wheelbase: "+wheelbase);
 
+
         mAm_tv.setText(String.format("%s - %s", make, model));
 
 
@@ -500,8 +523,8 @@ public class CarDetailScreen extends AppCompatActivity {
     private void saveDataToDB() {
 
         //Save Data to Database
-        VehicleTax vehicleTax = new VehicleTax(isTaxed, expDate);
-        VehicleMot vehicleMot = new VehicleMot(validMot, nextDate);
+        VehicleTax vehicleTax = new VehicleTax(isTaxed, taxDue);
+        VehicleMot vehicleMot = new VehicleMot(validMot, motDue);
         VehicleData vehicleData = new VehicleData(make, model, year, firstRegistered, colour, fuelType, cylinderCapacity,
                 co2Emissions,maxPower, notToMax, topSpeed, maxTorque,urban, extraUrban, combined,
                 transmission, gears, driveTrain, noCylinders, litres, doors, seats, bodyStyle,height, width, length, wheelbase);
@@ -516,7 +539,38 @@ public class CarDetailScreen extends AppCompatActivity {
 
     }
 
+    public void ShowTaxPopup(){
 
+        popup.setContentView(R.layout.pop_up_tax);
+        close_popup_tax = popup.findViewById(R.id.close_popup_tax);
+        popup_tax_tv = popup.findViewById(R.id.popup_tax_tv);
+        popup_tax_tv.setText(taxDue);
+
+
+        close_popup_tax.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popup.dismiss();
+            }
+        });
+        popup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popup.show();
+    }
+    public void ShowMotPopup(){
+        popup.setContentView(R.layout.pop_up_mot);
+        close_popup_mot = popup.findViewById(R.id.close_popup_mot);
+        popup_mot_tv = popup.findViewById(R.id.popup_mot_tv);
+        popup_mot_tv.setText(motDue);
+
+        close_popup_mot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popup.dismiss();
+            }
+        });
+        popup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popup.show();
+    }
 //    private void getGarageCar(){
 //        Intent intent = getIntent();
 //        String imageUrl = intent.getStringExtra("vehicle_image");

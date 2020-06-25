@@ -33,6 +33,7 @@ public class CarDisplay extends AppCompatActivity {
     public List<String> engineAndGearbox = new ArrayList<>();
     public List<String> chassis = new ArrayList<>();
     public List<String> dimensions = new ArrayList<>();
+    public List<String> taxAndMot = new ArrayList<>();
 
 
     public String carImage, expDate, nextDate;
@@ -77,6 +78,8 @@ public class CarDisplay extends AppCompatActivity {
         String width = intent.getStringExtra("Width");
         String length = intent.getStringExtra("Length");
         String wheelbase = intent.getStringExtra("Wheelbase");
+        String taxDue = intent.getStringExtra("TaxDue");
+        String motDue = intent.getStringExtra("MotDue");
 
 
         headerList();
@@ -110,6 +113,8 @@ public class CarDisplay extends AppCompatActivity {
         dimensions.add("Width: "+width);
         dimensions.add("Length: "+length);
         dimensions.add("Wheelbase: "+wheelbase);
+        taxAndMot.add("Tax expires on: "+ taxDue);
+        taxAndMot.add("Mot is due on: "+motDue);
 
         Picasso.get().load(imageUrl).into(imageView);
         model_make.setText(String.format("%s - %s", model, make));
@@ -133,6 +138,7 @@ public class CarDisplay extends AppCompatActivity {
         listDataHeader.add("Engine & Gearbox");
         listDataHeader.add("Chassis");
         listDataHeader.add("Dimensions");
+        listDataHeader.add("Tax & Mot");
 
         listHash = new HashMap<>();
 
@@ -148,6 +154,8 @@ public class CarDisplay extends AppCompatActivity {
         listHash.put("Chassis", chassis);
 
         listHash.put("Dimensions", dimensions);
+
+        listHash.put("Tax & Mot", taxAndMot);
 
     }
 }

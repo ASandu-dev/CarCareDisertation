@@ -39,9 +39,11 @@ public class MyGarageAdapter extends RecyclerView.Adapter<MyGarageAdapter.MyGara
     private String vehicle;
     private OnCarClickListener onCarClickListener;
 
-    public MyGarageAdapter(List<VehicleData> cars, List<VehicleImage> image, OnCarClickListener onCarClickListener) {
+    public MyGarageAdapter(List<VehicleData> cars, List<VehicleImage> image, List<VehicleTax> tax,List<VehicleMot>mot , OnCarClickListener onCarClickListener) {
         this.cars = cars;
         this.image = image;
+        this.tax = tax;
+        this.mot = mot;
         this.onCarClickListener = onCarClickListener;
     }
 

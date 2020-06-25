@@ -42,4 +42,6 @@
     <string name="carname">CarName</string>
     <string name="mygarage">MyGarage</string>
     <string name="listitem">listItem</string>
+    <string name="road_tax_is_due_on">Road Tax is due on:</string>
+    <string name="my_cars">My Cars</string>
 </resources>

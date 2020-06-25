@@ -20,6 +20,20 @@
         app:layout_constraintVertical_bias="0.865"
         app:srcCompat="@drawable/logo_corner" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/my_cars"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/recycle_view"
+        app:layout_constraintEnd_toStartOf="@+id/back_btn"
+        app:layout_constraintHorizontal_bias="0.552"
+        app:layout_constraintStart_toEndOf="@+id/imageView4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.818" />
+
     <Button
         android:id="@+id/back_btn"
         android:layout_width="45dp"
@@ -37,7 +51,9 @@
         android:layout_height="0dp"
         android:layout_marginTop="32dp"
         android:scrollbars="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4"
-        tools:layout_editor_absoluteX="-15dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -30,7 +31,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int i) {
-        return listHashMap.get(listDataHeader.get(i)).size();
+        return Objects.requireNonNull(listHashMap.get(listDataHeader.get(i))).size();
     }
 
     @Override
@@ -40,7 +41,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int i, int il) {
-        return listHashMap.get(listDataHeader.get(i)).get(il);
+        return Objects.requireNonNull(listHashMap.get(listDataHeader.get(i))).get(il);
     }
 
     @Override
