@@ -13,6 +13,7 @@ public class VehRepository {
     private LiveData<List<VehicleImage>> allImages;
     private LiveData<List<VehicleTax>> allTax;
     private LiveData<List<VehicleMot>> allMot;
+    private LiveData<List<DocId>> allDocIds;
 
 
     public VehRepository(Application application) {
@@ -22,6 +23,7 @@ public class VehRepository {
         allImages = vehDao.getVehicleImage();
         allTax = vehDao.getVehicleTax();
         allMot = vehDao.getVehicleMot();
+        allDocIds = vehDao.getDocId();
     }
 
     //Insert
@@ -38,11 +40,18 @@ public class VehRepository {
     public void insertMot(VehicleMot vehicleMot) {
         new InsertMotAsyncTask(vehDao).execute(vehicleMot);
     }
+    public void insertDocId(DocId docId) {
+        new InsertDocIdAsyncTask(vehDao).execute(docId);
+    }
 
 
     //Update
     public void update(VehicleData vehicleData) {
         new UpdateVehicleAsyncTask(vehDao).execute(vehicleData);
+    }
+
+    public void updateDocId(DocId docId) {
+        new UpdateDocIdAsyncTask(vehDao).execute(docId);
     }
 
     //Delete
@@ -59,6 +68,9 @@ public class VehRepository {
     }
     public void deleteMot(VehicleMot vehicleMot) {
         new DeleteMotAsyncTask(vehDao).execute(vehicleMot);
+    }
+    public void deleteDocId(DocId docId) {
+        new DeleteDocIdAsyncTask(vehDao).execute(docId);
     }
 
     //Delete All
@@ -78,6 +90,11 @@ public class VehRepository {
         new DeleteAllMotsAsyncTask(vehDao).execute();
     }
 
+    public void deleteAllDocIds() {
+        new DeleteAllDocIdsAsyncTask(vehDao).execute();
+    }
+
+
     public LiveData<List<VehicleData>> getAllVehicles() {
         return allVehicleData;
     }
@@ -93,6 +110,11 @@ public class VehRepository {
     public LiveData<List<VehicleMot>> getAllMot() {
         return allMot;
     }
+
+    public LiveData<List<DocId>> getAllDocIds() {
+        return allDocIds;
+    }
+
 
 
     //Async Tasks
@@ -153,6 +175,21 @@ public class VehRepository {
         }
     }
 
+    private static class InsertDocIdAsyncTask extends AsyncTask<DocId, Void, Void> {
+        private VehDao vehDao;
+
+        private InsertDocIdAsyncTask(VehDao vehDao) {
+            this.vehDao = vehDao;
+        }
+
+        @Override
+        protected Void doInBackground(DocId... docs) {
+            vehDao.insertDocId(docs[0]);
+            return null;
+        }
+    }
+
+
     private static class UpdateVehicleAsyncTask extends AsyncTask<VehicleData, Void, Void> {
         private VehDao vehDao;
 
@@ -163,6 +200,20 @@ public class VehRepository {
         @Override
         protected Void doInBackground(VehicleData... notes) {
             vehDao.updateVehicle(notes[0]);
+            return null;
+        }
+    }
+
+    private static class UpdateDocIdAsyncTask extends AsyncTask<DocId, Void, Void> {
+        private VehDao vehDao;
+
+        private UpdateDocIdAsyncTask(VehDao vehDao) {
+            this.vehDao = vehDao;
+        }
+
+        @Override
+        protected Void doInBackground(DocId... docs) {
+            vehDao.updateDocId(docs[0]);
             return null;
         }
     }
@@ -223,6 +274,20 @@ public class VehRepository {
         }
     }
 
+    private static class DeleteDocIdAsyncTask extends AsyncTask<DocId, Void, Void> {
+        private VehDao vehDao;
+
+        private DeleteDocIdAsyncTask(VehDao vehDao) {
+            this.vehDao = vehDao;
+        }
+
+        @Override
+        protected Void doInBackground(DocId... docs) {
+            vehDao.deleteDocId(docs[0]);
+            return null;
+        }
+    }
+
     private static class DeleteAllVehiclesAsyncTask extends AsyncTask<VehicleData, Void, Void> {
         private VehDao vehDao;
 
@@ -278,4 +343,19 @@ public class VehRepository {
             return null;
         }
     }
+
+    private static class DeleteAllDocIdsAsyncTask extends AsyncTask<Void, Void, Void> {
+        private VehDao vehDao;
+
+        private DeleteAllDocIdsAsyncTask(VehDao vehDao) {
+            this.vehDao = vehDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            vehDao.deleteAllDocIds();
+            return null;
+        }
+    }
+
 }

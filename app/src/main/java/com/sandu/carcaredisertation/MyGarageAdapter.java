@@ -2,16 +2,17 @@ package com.sandu.carcaredisertation;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sandu.carcaredisertation.PojoAndDatabase.DocId;
 import com.sandu.carcaredisertation.PojoAndDatabase.VehRepository;
 import com.sandu.carcaredisertation.PojoAndDatabase.VehicleData;
 import com.sandu.carcaredisertation.PojoAndDatabase.VehicleDatabase;
@@ -35,15 +36,17 @@ public class MyGarageAdapter extends RecyclerView.Adapter<MyGarageAdapter.MyGara
     private List<VehicleMot> mot = new ArrayList<>();
     private List<VehicleData> cars = new ArrayList<>();
     private List<VehicleImage> image = new ArrayList<>();
+    private List<DocId> docIdentifier = new ArrayList<>();
     private VehicleViewModel vehicleViewModel;
     private String vehicle;
     private OnCarClickListener onCarClickListener;
 
-    public MyGarageAdapter(List<VehicleData> cars, List<VehicleImage> image, List<VehicleTax> tax,List<VehicleMot>mot , OnCarClickListener onCarClickListener) {
+    public MyGarageAdapter(List<VehicleData> cars, List<VehicleImage> image, List<VehicleTax> tax,List<VehicleMot>mot, List<DocId> docIdentifier , OnCarClickListener onCarClickListener) {
         this.cars = cars;
         this.image = image;
         this.tax = tax;
         this.mot = mot;
+        this.docIdentifier = docIdentifier;
         this.onCarClickListener = onCarClickListener;
     }
 
@@ -57,16 +60,33 @@ public class MyGarageAdapter extends RecyclerView.Adapter<MyGarageAdapter.MyGara
     @Override
     public void onBindViewHolder(@NonNull final MyGarageHolder holder, int position) {
 
+
+
         if (cars != null) {
             VehicleData vehicleData = cars.get(position);
             holder.setData(vehicleData.getVehMake(), position);
 
-            VehicleImage vehicleImage = image.get(position);
-            holder.setCarImg(vehicleImage.getVehImg(), position);
+            if (image.isEmpty()){
+                Toast.makeText(context, "could not load image", Toast.LENGTH_SHORT).show();
+
+
+        }else {
+                VehicleImage vehicleImage = image.get(position);
+                try {
+                    holder.setCarImg(vehicleImage.getVehImg(), position);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
         }
 
 
     }
+
+
+
 
     @Override
     public int getItemCount() {
@@ -93,10 +113,14 @@ public class MyGarageAdapter extends RecyclerView.Adapter<MyGarageAdapter.MyGara
         notifyDataSetChanged();
     }
 
+    public void setDocId(List<DocId> docIds){
+        docIdentifier = docIds;
+        notifyDataSetChanged();
+    }
+
     public VehicleData getVehicleAtPosition(int position) {
         return cars.get(position);
     }
-
     public VehicleImage getImageAtPosition(int position) {
         return image.get(position);
     }
@@ -105,6 +129,9 @@ public class MyGarageAdapter extends RecyclerView.Adapter<MyGarageAdapter.MyGara
     }
     public VehicleMot getMotAtPosition(int position){
         return mot.get(position);
+    }
+    public DocId getDocAtPosition(int position){
+        return docIdentifier.get(position);
     }
 
 

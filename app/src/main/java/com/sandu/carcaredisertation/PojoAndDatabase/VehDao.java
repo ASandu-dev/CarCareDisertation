@@ -12,6 +12,7 @@ import java.util.List;
 @Dao
 public interface VehDao {
 
+    //Insert
     @Insert
     void insertVehicle(VehicleData vehicleData);
 
@@ -24,11 +25,21 @@ public interface VehDao {
     @Insert
     void insertMot(VehicleMot vehicleMot);
 
+    @Insert
+    void insertDocId(DocId docId);
+
+    //Update
+
     @Update
     void updateVehicle(VehicleData vehicleData);
 
     @Update
     void updateImage(VehicleImage vehicleImage);
+
+    @Update
+    void updateDocId(DocId docId);
+
+    //Delete
 
     @Delete
     void deleteVehicle(VehicleData vehicleData);
@@ -42,6 +53,11 @@ public interface VehDao {
     @Delete
     void deleteMot(VehicleMot vehicleMot);
 
+    @Delete
+    void deleteDocId(DocId docId);
+
+    //Query
+
     @Query("DELETE FROM vehicle_database")
     void deleteAllVehicles();
 
@@ -54,6 +70,11 @@ public interface VehDao {
     @Query("DELETE FROM vehicle_mot")
     void deleteAllMots();
 
+    @Query("DELETE FROM doc_id")
+    void deleteAllDocIds();
+
+    //Query Live data
+
     @Query("SELECT * FROM vehicle_database")
     LiveData<List<VehicleData>> getVehicleData();
 
@@ -65,5 +86,8 @@ public interface VehDao {
 
     @Query("SELECT * FROM vehicle_mot")
     LiveData<List<VehicleMot>> getVehicleMot();
+
+    @Query("SELECT * FROM doc_id")
+    LiveData<List<DocId>> getDocId();
 
 }

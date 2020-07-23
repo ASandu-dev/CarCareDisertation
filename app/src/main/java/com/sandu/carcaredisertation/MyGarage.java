@@ -2,9 +2,9 @@ package com.sandu.carcaredisertation;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +13,12 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.sandu.carcaredisertation.PojoAndDatabase.DocId;
 import com.sandu.carcaredisertation.PojoAndDatabase.VehRepository;
 import com.sandu.carcaredisertation.PojoAndDatabase.VehicleData;
 import com.sandu.carcaredisertation.PojoAndDatabase.VehicleImage;
@@ -27,7 +32,6 @@ import java.util.List;
 public class MyGarage extends AppCompatActivity implements MyGarageAdapter.OnCarClickListener {
 
 
-
     RecyclerView recyclerView;
     Button back_btn;
 
@@ -38,16 +42,13 @@ public class MyGarage extends AppCompatActivity implements MyGarageAdapter.OnCar
     private List<VehicleImage> image = new ArrayList<>();
     private List<VehicleTax> tax = new ArrayList<>();
     private List<VehicleMot> mot = new ArrayList<>();
-
-
-
+    private List<DocId> docIds = new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_garage);
-
 
 
         back_btn = findViewById(R.id.back_btn);
@@ -58,7 +59,7 @@ public class MyGarage extends AppCompatActivity implements MyGarageAdapter.OnCar
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
 
-        adapter = new MyGarageAdapter(cars, image, tax, mot, this);
+        adapter = new MyGarageAdapter(cars, image, tax, mot, docIds, this);
         recyclerView.setAdapter(adapter);
 
         back_btn.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +104,13 @@ public class MyGarage extends AppCompatActivity implements MyGarageAdapter.OnCar
             }
         });
 
+        vehRepository.getAllDocIds().observe(this, new Observer<List<DocId>>() {
+            @Override
+            public void onChanged(List<DocId> docIds) {
+                adapter.setDocId(docIds);
+            }
+        });
+
 
     }
 
@@ -111,7 +119,7 @@ public class MyGarage extends AppCompatActivity implements MyGarageAdapter.OnCar
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
 
-            return false;
+            return true;
         }
 
         @Override
@@ -124,12 +132,53 @@ public class MyGarage extends AppCompatActivity implements MyGarageAdapter.OnCar
             VehicleTax vehicleTax = adapter.getTaxAtPosition(position);
             VehicleMot vehicleMot = adapter.getMotAtPosition(position);
 
+
             VehicleViewModel vehicleViewModel = new VehicleViewModel(adapter.application);
             vehicleViewModel.deleteCar(vehicleData);
             vehicleViewModel.deleteImage(vehicleImage);
 
+            deleteFromFirestore(position);
+
+
         }
     };
+
+    public void deleteFromFirestore(int position) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+
+
+        if (user != null) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocId docId = adapter.getDocAtPosition(position);
+
+
+            String id = docId.getDocId();
+
+
+            db.collection("vehicle").document(id)
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(MyGarage.this, "Vehicle deleted!", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                    Toast.makeText(MyGarage.this, "Failed to delete vehicle!!!", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+            VehicleViewModel vehicleViewModel = new VehicleViewModel(adapter.application);
+            vehicleViewModel.deleteDocId(docId);
+        } else {
+            Toast.makeText(MyGarage.this, "No user detected", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
 
     @Override
     public void onCarClick(int position) {
@@ -138,7 +187,6 @@ public class MyGarage extends AppCompatActivity implements MyGarageAdapter.OnCar
         VehicleImage vehicleImage = adapter.getImageAtPosition(position);
         VehicleTax vehicleTax = adapter.getTaxAtPosition(position);
         VehicleMot vehicleMot = adapter.getMotAtPosition(position);
-
 
 
         Intent i = new Intent(this, CarDisplay.class);

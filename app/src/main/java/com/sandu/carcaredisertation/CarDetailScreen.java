@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.RequestQueue;
@@ -23,6 +24,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.sandu.carcaredisertation.PojoAndDatabase.DocId;
 import com.sandu.carcaredisertation.PojoAndDatabase.VehRepository;
 import com.sandu.carcaredisertation.PojoAndDatabase.VehicleData;
 import com.sandu.carcaredisertation.PojoAndDatabase.VehicleDatabase;
@@ -79,9 +87,12 @@ public class CarDetailScreen extends AppCompatActivity {
     public String height, width, length, wheelbase;
     //Public Values Tax and MOT
     public String taxDue, motDue;
+    //Public Values DocId
+    public String documentId;
 
     public String carImage;
-    public boolean isTaxed,validMot;
+
+    public boolean isTaxed, validMot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,9 +117,10 @@ public class CarDetailScreen extends AppCompatActivity {
 
         listView = findViewById(R.id.eListView);
 
+
+
 //        //Full Screen
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
 
 
         jsonParse();
@@ -122,6 +134,7 @@ public class CarDetailScreen extends AppCompatActivity {
         saveToGarage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
                 saveDataToDB();
                 Intent i = new Intent(CarDetailScreen.this, MainActivity.class);
@@ -143,7 +156,7 @@ public class CarDetailScreen extends AppCompatActivity {
         info_tax.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    ShowTaxPopup();
+                ShowTaxPopup();
             }
         });
         info_mot.setOnClickListener(new View.OnClickListener() {
@@ -254,7 +267,6 @@ public class CarDetailScreen extends AppCompatActivity {
 
                     boolean hasMotResponse = vehStatus.getBoolean("VehicleHasCurrentMot");
                     String nextDueDate = vehStatus.getString("NextMotDueDate");
-
 
 
                     Log.e("motdata", String.valueOf(hasMotResponse));
@@ -374,7 +386,7 @@ public class CarDetailScreen extends AppCompatActivity {
         RequestQueue requestVehicleDataQueue = Volley.newRequestQueue(getApplicationContext());
         requestVehicleDataQueue.add(requestVehicleData);
 
-            //GetVehicle Image
+        //GetVehicle Image
         StringRequest requestVehicleImg = new StringRequest(urlVehImage, new com.android.volley.Response.Listener<String>() {
 
             @Override
@@ -412,6 +424,7 @@ public class CarDetailScreen extends AppCompatActivity {
 
         RequestQueue requestVehImgQueue = Volley.newRequestQueue(getApplicationContext());
         requestVehImgQueue.add(requestVehicleImg);
+        
 
     }
 
@@ -420,10 +433,9 @@ public class CarDetailScreen extends AppCompatActivity {
         taxDue = expiryDate;
 
 
-
-        if (isTaxed = true){
+        if (isTaxed = true) {
             taxed_tv.setTextColor(Color.GREEN);
-        }else {
+        } else {
             taxed_tv.setTextColor(Color.RED);
         }
 
@@ -435,10 +447,10 @@ public class CarDetailScreen extends AppCompatActivity {
         motDue = nextDueDate;
 
 
-        if (validMot = true){
+        if (validMot = true) {
             mot_tv.setTextColor(Color.GREEN);
 
-        }else {
+        } else {
             mot_tv.setTextColor(Color.RED);
         }
     }
@@ -476,33 +488,33 @@ public class CarDetailScreen extends AppCompatActivity {
         length = vehLength;
         wheelbase = vehWheelBase;
 
-        basicInfo.add("Make: "+ make);
-        basicInfo.add("Model: "+model);
-        basicInfo.add("Year: "+year);
-        basicInfo.add("First Registered: "+firstRegistered);
-        basicInfo.add("Colour: "+colour);
-        basicInfo.add("Fuel Type: "+fuelType);
-        basicInfo.add("Cylinder Capacity: "+cylinderCapacity);
-        basicInfo.add("CO2 Emissions: "+co2Emissions);
-        performance.add("Max Power (BHP): "+maxPower);
-        performance.add("Max Torque (Nm): "+maxTorque);
-        performance.add("0-60 Mph: "+notToMax);
-        performance.add("Top Speed (Mph): "+topSpeed);
-        economy.add("Urban (Mpg): "+urban);
-        economy.add("Extra-Urban (Mpg): "+extraUrban);
-        economy.add("Combined (Mpg): "+combined);
-        engineAndGearbox.add("Transmission: "+transmission);
-        engineAndGearbox.add("Gears:"+gears);
-        engineAndGearbox.add("Drive Train: "+driveTrain);
-        engineAndGearbox.add("No of Cylinders: "+noCylinders);
-        engineAndGearbox.add("Engine Capacity: "+litres);
-        chassis.add("No of Doors: "+doors);
-        chassis.add("No of Seats: "+seats);
-        chassis.add("Body Style: "+bodyStyle);
-        dimensions.add("Height: "+height);
-        dimensions.add("Width: "+width);
-        dimensions.add("Length: "+length);
-        dimensions.add("Wheelbase: "+wheelbase);
+        basicInfo.add("Make: " + make);
+        basicInfo.add("Model: " + model);
+        basicInfo.add("Year: " + year);
+        basicInfo.add("First Registered: " + firstRegistered);
+        basicInfo.add("Colour: " + colour);
+        basicInfo.add("Fuel Type: " + fuelType);
+        basicInfo.add("Cylinder Capacity: " + cylinderCapacity);
+        basicInfo.add("CO2 Emissions: " + co2Emissions);
+        performance.add("Max Power (BHP): " + maxPower);
+        performance.add("Max Torque (Nm): " + maxTorque);
+        performance.add("0-60 Mph: " + notToMax);
+        performance.add("Top Speed (Mph): " + topSpeed);
+        economy.add("Urban (Mpg): " + urban);
+        economy.add("Extra-Urban (Mpg): " + extraUrban);
+        economy.add("Combined (Mpg): " + combined);
+        engineAndGearbox.add("Transmission: " + transmission);
+        engineAndGearbox.add("Gears:" + gears);
+        engineAndGearbox.add("Drive Train: " + driveTrain);
+        engineAndGearbox.add("No of Cylinders: " + noCylinders);
+        engineAndGearbox.add("Engine Capacity: " + litres);
+        chassis.add("No of Doors: " + doors);
+        chassis.add("No of Seats: " + seats);
+        chassis.add("Body Style: " + bodyStyle);
+        dimensions.add("Height: " + height);
+        dimensions.add("Width: " + width);
+        dimensions.add("Length: " + length);
+        dimensions.add("Wheelbase: " + wheelbase);
 
 
         mAm_tv.setText(String.format("%s - %s", make, model));
@@ -514,8 +526,22 @@ public class CarDetailScreen extends AppCompatActivity {
 
         carImage = vehImg;
 
-
         Picasso.get().load(carImage).into(imageView);
+
+        if (carImage == null){
+            Toast.makeText(context, "No image found do the search again", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, MainActivity.class));
+        }
+
+
+    }
+
+
+    public void useDocId(String docId){
+        documentId = docId;
+        VehRepository vehicleRepository = new VehRepository((Application) getApplicationContext());
+        DocId dId = new DocId(documentId);
+        vehicleRepository.insertDocId(dId);
 
 
     }
@@ -526,9 +552,10 @@ public class CarDetailScreen extends AppCompatActivity {
         VehicleTax vehicleTax = new VehicleTax(isTaxed, taxDue);
         VehicleMot vehicleMot = new VehicleMot(validMot, motDue);
         VehicleData vehicleData = new VehicleData(make, model, year, firstRegistered, colour, fuelType, cylinderCapacity,
-                co2Emissions,maxPower, notToMax, topSpeed, maxTorque,urban, extraUrban, combined,
-                transmission, gears, driveTrain, noCylinders, litres, doors, seats, bodyStyle,height, width, length, wheelbase);
+                co2Emissions, maxPower, notToMax, topSpeed, maxTorque, urban, extraUrban, combined,
+                transmission, gears, driveTrain, noCylinders, litres, doors, seats, bodyStyle, height, width, length, wheelbase);
         VehicleImage vehicleImage = new VehicleImage(carImage);
+
 
 
         VehRepository vehicleRepository = new VehRepository((Application) getApplicationContext());
@@ -537,9 +564,43 @@ public class CarDetailScreen extends AppCompatActivity {
         vehicleRepository.insert(vehicleData);
         vehicleRepository.insertImg(vehicleImage);
 
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user!= null){
+            // Access a Cloud Firestore instance from your Activity
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("vehicle")
+                    .add(vehicleData)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+
+                            Toast.makeText(CarDetailScreen.this, "Data saved successfully to Firebase", Toast.LENGTH_SHORT).show();
+                            String docId =  documentReference.getId();
+
+
+                            useDocId(docId);
+
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(CarDetailScreen.this, "Data save failed!!!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }else {
+            Toast.makeText(this, "Data  Not saved to Cloud", Toast.LENGTH_SHORT).show();
+        }
+
+
+
     }
 
-    public void ShowTaxPopup(){
+    public void ShowTaxPopup() {
 
         popup.setContentView(R.layout.pop_up_tax);
         close_popup_tax = popup.findViewById(R.id.close_popup_tax);
@@ -556,7 +617,8 @@ public class CarDetailScreen extends AppCompatActivity {
         popup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         popup.show();
     }
-    public void ShowMotPopup(){
+
+    public void ShowMotPopup() {
         popup.setContentView(R.layout.pop_up_mot);
         close_popup_mot = popup.findViewById(R.id.close_popup_mot);
         popup_mot_tv = popup.findViewById(R.id.popup_mot_tv);
@@ -571,22 +633,9 @@ public class CarDetailScreen extends AppCompatActivity {
         popup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         popup.show();
     }
-//    private void getGarageCar(){
-//        Intent intent = getIntent();
-//        String imageUrl = intent.getStringExtra("vehicle_image");
-//        String make = intent.getStringExtra("vehicle_make");
-//        String model = intent.getStringExtra("vehicle_model");
-//        String mpg = intent.getStringExtra("vehicle_consumption");
-//        String bhp = intent.getStringExtra("vehicle_horsepower");
-//        String width = intent.getStringExtra("vehicle_width");
-//        String height = intent.getStringExtra("vehicle_height");
-//        String length = intent.getStringExtra("vehicle_length");
-//        String engine = intent.getStringExtra("vehicle_engine");
-//
-//        Picasso.get().load(imageUrl).into(imageView);
-//        mAm.setText(String.format("%s%s", make, model));
-//
-//    }
+
+
+
 
 
 }

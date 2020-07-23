@@ -44,4 +44,8 @@
     <string name="listitem">listItem</string>
     <string name="road_tax_is_due_on">Road Tax is due on:</string>
     <string name="my_cars">My Cars</string>
+    <string name="logged_in_as">Logged in as:</string>
+    <string name="logoff">LogOff</string>
+    <string name="signed_out">Signed Out</string>
+    <string name="log_off">Log Off</string>
 </resources>

@@ -44,33 +44,59 @@
         app:layout_constraintStart_toStartOf="@+id/reg_et"
         app:layout_constraintTop_toBottomOf="@+id/reg_et" />
 
-    <ImageView
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="2dp"
-        android:background="@drawable/garage_ico"
-        android:backgroundTint="@color/white"
-        android:contentDescription="@string/car_placeholder_img"
-        android:elevation="2dp"
-        android:foregroundGravity="center"
-        android:translationZ="2dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/myGarage_btn"
-        app:layout_constraintHorizontal_bias="0.29"
-        app:layout_constraintStart_toStartOf="@+id/myGarage_btn"
-        app:layout_constraintTop_toTopOf="@+id/myGarage_btn" />
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/myGarage_btn"
+        app:layout_constraintEnd_toEndOf="@+id/reg_et"
+        app:layout_constraintStart_toStartOf="@+id/reg_et"
+        app:layout_constraintTop_toBottomOf="@+id/search_btn" >
+
+    </com.google.android.gms.common.SignInButton>
+
+    <TextView
+        android:id="@+id/loggedIn_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_marginBottom="8dp"
+        android:visibility="invisible"
+        android:text="@string/logged_in_as"
+        android:textColor="@color/colorLightBlue"
+        app:layout_constraintBottom_toTopOf="@+id/display_name"
+        app:layout_constraintEnd_toEndOf="@+id/display_name"
+        app:layout_constraintStart_toStartOf="@+id/display_name" />
+
+    <TextView
+        android:id="@+id/display_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signed_out"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.893" />
+
 
     <Button
         android:id="@+id/myGarage_btn"
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:layout_marginTop="196dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="42dp"
         android:backgroundTint="@color/colorPrimaryDark"
+        android:drawableStart="@drawable/garage_ico"
+        android:drawablePadding="10dp"
+        android:drawableTint="@color/white"
         android:elevation="0dp"
-        android:gravity="center"
+        android:gravity="center_vertical"
+        android:paddingLeft="150dp"
         android:text="@string/mygarage"
-        android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -80,7 +106,21 @@
 
     </Button>
 
-
+    <Button
+        android:id="@+id/logOff_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/log_off"
+        android:textAllCaps="false"
+        android:drawableStart="@drawable/logoff_btn"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/red"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/sign_in_button"
+        app:layout_constraintEnd_toEndOf="@+id/sign_in_button"
+        app:layout_constraintStart_toStartOf="@+id/sign_in_button"
+        app:layout_constraintTop_toTopOf="@+id/sign_in_button" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
